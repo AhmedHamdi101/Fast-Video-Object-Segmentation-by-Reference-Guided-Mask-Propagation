@@ -9,9 +9,21 @@ Pre-Traing on simulated samples and then Fine-tuning on video data
 
 #### Pre-training on simulated samples
 In the first stage,
-we used image datasets with instance object masks ([Pascal VOC](https://pjreddie.com/projects/pascal-voc-dataset-mirror/)), To automatically generate the training samples from an image with an object mask, by applying two image transformation (rotation and mirror)
+I used image datasets with instance object masks ([Pascal VOC](https://pjreddie.com/projects/pascal-voc-dataset-mirror/)), I simulated the trainning data by having the real image and mask as the refrence frame and and the mirrored image as the new target frame and the mirrored/deformed mask as the previous frame mask 
 
-![2007_000032](https://user-images.githubusercontent.com/62859032/130882244-db427fd4-2bdb-441f-b4fd-702a681c5368.jpg)
+Image transformation:
+
+ -Mirror on both the Image and the Mask
+ 
+ -Shearing on the mask to deform it
+
+##### Before
+
+![before](https://user-images.githubusercontent.com/62859032/131570732-024d52e4-fef9-44b2-b21d-27b8051ee137.png)
+
+##### After
+
+![after](https://user-images.githubusercontent.com/62859032/131570750-0f1cd74c-6c49-455d-b96c-6b05997660b3.png)
 
 
 
@@ -19,10 +31,12 @@ we used image datasets with instance object masks ([Pascal VOC](https://pjreddie
 ![Screenshot 2021-08-22 220831](https://user-images.githubusercontent.com/62859032/130368685-53b1d7c4-087c-4bff-9eca-e732701f6a5c.png)
 
 ### Encoders
-it is two parallel encoders, each consist of one convolutional layer attached to a resnet50 model.
+The encoder takes a pair of RGB images, each with a mask map, as an input. The encoder includes a reference and a target stream each consist of one convolutional layer attached to a resnet50 model.
 
 ### Global Convolutional Block
-The output of the two encoders are concatenated then feeded to the GCB
+The outputs of the two encoder streams are concatenated and fed into a global convolution block. This block is designed to perform global feature matching between the reference and the target streams to localize the target object
 
 ### Decoder
-Which consists of 3 refinement modules taking the output of the previous block, upsample it and Add it to a skip connection from the resnet50 encoder  
+The decoder takes the output of the global convolution block and also features in the target encoder stream
+through skip-connections to produce a mask output.
+To efficiently merge features in different scales, it employ the refinement module as the building block of our decoder. 

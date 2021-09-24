@@ -25,6 +25,19 @@ Image transformation:
 
 ![after](https://user-images.githubusercontent.com/62859032/131570750-0f1cd74c-6c49-455d-b96c-6b05997660b3.png)
 
+#### Dataset and Dataloader
+For the pre-trained data I extended the class Dataset from pytorch and modified the __getitem__() function, it will return a sample which type is dict contains 
+
+-Image
+
+-Mask
+
+-Target Image
+
+-Target Mask
+
+-The output mask (to calculate the loss on it)
+
 
 
 ## Model Structure

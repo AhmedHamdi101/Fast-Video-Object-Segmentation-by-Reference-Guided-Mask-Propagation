@@ -38,6 +38,7 @@ For the pre-trained data I extended the class Dataset from pytorch and modified 
 
 -The output mask (to calculate the loss on it)
 
+and all of them are resized to (400,400) using a custom transform function which is implemented using the __cv2.resize()__ function 
 
 
 ## Model Structure
